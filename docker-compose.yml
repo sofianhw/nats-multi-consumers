@@ -1,0 +1,23 @@
+version: "3"
+services:
+  nats:
+    image: nats:2.10
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    command: "-c nats-server.conf"
+    entrypoint: /nats-server
+    volumes:
+      - ./conf/nats-server.conf:/nats-server.conf
+      - jetstream_data:/data/jetstream
+  nui:
+    image: ghcr.io/nats-nui/nui:edge
+    volumes:
+      - ./db:/db
+    ports:
+      - "31312:31311" 
+    depends_on:
+      - nats
+
+volumes:
+  jetstream_data:
